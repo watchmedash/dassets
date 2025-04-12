@@ -1,41 +1,55 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Check session storage to see if modal has already been shown
-  if (!sessionStorage.getItem("noodleShown")) {
-    // Create noodle elements (warning message instead of image)
-    const noodleOverlay = document.createElement("div");
-    noodleOverlay.innerHTML = `
-      <div class="moodle-overlay active" id="noodleOverlay">
-        <div class="moodle">
-          <div class="content">
-          <p><strong>Support Us:</strong> Help DashFlix.top grow by spreading the word! Share our website with friends and family to bring in more visitors. Your support means a lot!</p>
-            <button class="close-button disabled-button" id="closeNoodle" disabled>Close (5)</button>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(noodleOverlay);
+let jokes = [];
+let currentIndex = 0;
 
-    const closeNoodle = document.getElementById("closeNoodle");
-    const overlay = document.getElementById("noodleOverlay");
+async function fetchJokes() {
+    try {
+        const response = await fetch("moodle.json");
+        jokes = await response.json();
+        showRandomJoke();
+    } catch (error) {
+        console.error("Error loading jokes:", error);
+        document.getElementById("joke-container").innerText = "Failed to load jokes.";
+    }
+}
 
-    // Start countdown for the button
-    let countdown = 5; // 5 seconds
-    const countdownInterval = setInterval(() => {
-      countdown -= 1;
-      closeNoodle.textContent = `Close (${countdown})`;
-      if (countdown === 0) {
-        clearInterval(countdownInterval);
-        closeNoodle.textContent = "Close";
-        closeNoodle.disabled = false; // Enable the button
-        closeNoodle.classList.remove("disabled-button"); // Remove disabled styling
-      }
-    }, 1000);
+function renderJoke(index) {
+    const jokeContainer = document.getElementById("joke-container");
+    const joke = jokes[index].joke;
 
-    // Add click event listener for the close button
-    closeNoodle.addEventListener("click", () => {
-      overlay.classList.remove("active");
-      // Save to session storage that modal has been shown
-      sessionStorage.setItem("noodleShown", "true");
-    });
-  }
+    const [setup, punchline] = joke.includes("?") ? joke.split("? ") : [joke, ""];
+
+    const formattedJoke = punchline
+        ? `${setup}? <span class="spoiler" onclick="revealSpoiler(this)">${punchline}</span>`
+        : setup;
+
+    jokeContainer.innerHTML = formattedJoke;
+}
+
+function revealSpoiler(spoilerElement) {
+    spoilerElement.classList.add("revealed");
+}
+
+function showRandomJoke() {
+    currentIndex = Math.floor(Math.random() * jokes.length);
+    renderJoke(currentIndex);
+}
+
+document.getElementById("prev").addEventListener("click", () => {
+    if (currentIndex > 0) {
+        currentIndex -= 1;
+    } else {
+        currentIndex = jokes.length - 1;
+    }
+    renderJoke(currentIndex);
 });
+
+document.getElementById("next").addEventListener("click", () => {
+    if (currentIndex < jokes.length - 1) {
+        currentIndex += 1;
+    } else {
+        currentIndex = 0;
+    }
+    renderJoke(currentIndex);
+});
+
+fetchJokes();
