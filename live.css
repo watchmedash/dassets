@@ -1,0 +1,206 @@
+.channel-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.channel-layout > * {
+  flex-basis: 100%;
+}
+
+.channel-list-wrapper {
+  padding: var(--space-sm);
+}
+
+.channel-list-wrapper h1 {
+  font-size: 1.75rem;
+  animation: fadeIn 0.5s ease-in; /* Fade-in animation for the header */
+}
+
+.channel {
+  display: grid;
+  grid-template-columns: 1rem 4rem 1fr;
+  gap: 1rem;
+  align-items: center;
+  background: var(--color-background-card);
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  transition: transform 250ms, box-shadow 250ms; /* Transition for transform and shadow */
+  border: var(--border-width) solid var(--color-background-card);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+}
+
+.channel[data-playing="true"] {
+  border-color: var(--color-link-default);
+}
+
+.play-channel {
+  all: unset;
+  cursor: pointer;
+  height: 100%;
+  background: var(--color-background);
+  transition: background 200ms; /* Transition for background color */
+}
+
+.channel-title {
+  font-weight: 800;
+}
+
+.channel-language {
+  color: var(--color-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.handle {
+  text-align: center;
+  opacity: 0.2;
+  cursor: ns-resize;
+  transition: opacity 200ms; /* Transition for opacity */
+}
+
+.handle:hover {
+  opacity: 0.5; /* Increase visibility on hover */
+}
+
+.label {
+  color: var(--color-ui);
+  margin: var(--space-sm) 0 0.25rem 0;
+}
+
+.player-wrapper {
+  background: var(--color-background-intense);
+  padding: var(--space-sm);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  transition: transform 250ms; /* Transition for transform */
+}
+
+.sticky {
+  position: sticky;
+  top: var(--space-sm);
+}
+
+.video-wrapper {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.video-wrapper video {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  transition: transform 250ms; /* Transition for video transform */
+}
+
+@media (max-width: 768px) {
+  .channel-layout {
+    flex-direction: column;
+  }
+
+  .player-wrapper {
+    width: 90%;
+    margin: 0 auto;
+    order: -1;
+  }
+
+  .channel-list-wrapper {
+    width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); /* Start slightly above */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* End at normal position */
+  }
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: #1a1a1a;
+  padding: 6px 0;
+  border-top: 2px solid #333;
+  z-index: 1000;
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.bottom-nav:hover {
+  background-color: #2a2a2a;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.nav-item {
+  color: #e0e0e0;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  flex-grow: 1;
+  position: relative;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  animation: pulse 1.5s infinite;
+}
+
+.nav-item i {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #ffffff;
+  transform: scale(1.1);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6);
+}
+
+.nav-item:hover i {
+  transform: scale(1.4);
+}
+
+/* Slide-up Extra Links */
+.more-links {
+  display: none;
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  background-color: #1a1a1a;
+  padding: 10px;
+  border: 1px solid #333;
+  z-index: 1001;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.more-links a {
+  display: block;
+  color: #e0e0e0;
+  padding: 4px 0;
+  text-decoration: none;
+  text-align: center;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.more-links a:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6);
+}
+
+.more-links.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  animation: slideIn 0.5s forwards ease-in-out;
+}
